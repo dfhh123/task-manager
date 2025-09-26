@@ -1,0 +1,14 @@
+{
+  "type": "record",
+  "name": "ActivityUpdatedDomainEvent",
+  "namespace": "com.home.avro.event.activity",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    }
+  ]
+}

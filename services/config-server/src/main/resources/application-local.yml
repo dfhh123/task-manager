@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations: file:///${user.home}/dev/super-pet/event-platform/config/cloud/{application}

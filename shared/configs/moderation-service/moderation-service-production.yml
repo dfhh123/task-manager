@@ -1,0 +1,151 @@
+server:
+  port: 8083
+  tomcat:
+    threads:
+      max: 150
+      min-spare: 10
+    connection-timeout: 20000
+    max-connections: 8192
+
+spring:
+  application:
+    name: moderation-service
+
+  # Production database configuration
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 20
+      minimum-idle: 8
+      idle-timeout: 600000
+      leak-detection-threshold: 60000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
+        connection:
+          provider_disables_autocommit: true
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+    open-in-view: false
+
+  # Production Kafka configuration
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+    consumer:
+      group-id: moderation-group-prod
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
+        specific.avro.reader: true
+        auto.register.schemas: false
+        use.latest.version: true
+        security.protocol: ${KAFKA_SECURITY_PROTOCOL:SASL_SSL}
+        sasl.mechanism: ${KAFKA_SASL_MECHANISM:PLAIN}
+        sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG}
+        ssl.endpoint.identification.algorithm: https
+      enable-auto-commit: false
+      fetch-min-size: 1024
+      fetch-max-wait: 500
+      max-poll-records: 50
+    listener:
+      ack-mode: MANUAL_IMMEDIATE
+      concurrency: 5
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
+        auto.register.schemas: false
+        use.latest.version: true
+        security.protocol: ${KAFKA_SECURITY_PROTOCOL:SASL_SSL}
+        sasl.mechanism: ${KAFKA_SASL_MECHANISM:PLAIN}
+        sasl.jaas.config: ${KAFKA_SASL_JAAS_CONFIG}
+        ssl.endpoint.identification.algorithm: https
+      acks: all
+      retries: 5
+      enable-idempotence: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL}
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
+
+# Production application configuration
+moderation:
+  rules:
+    profanity-filter: true
+    spam-detection: true
+    content-analysis: true
+  ai:
+    enabled: ${AI_MODERATION_ENABLED:true}
+    api-key: ${AI_API_KEY}
+    model: ${AI_MODEL:gpt-4}
+    timeout: ${AI_TIMEOUT:30000}
+    max-retries: 3
+  thresholds:
+    spam-score: 0.75
+    toxicity-score: 0.65
+    manual-review-score: 0.55
+  performance:
+    thread-pool-size: 10
+    queue-capacity: 1000
+    processing-timeout: 60000
+
+# Production logging
+logging:
+  level:
+    com.home: INFO
+    org.springframework.kafka: WARN
+    org.hibernate: WARN
+    org.apache.kafka: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}] [%X{traceId:-},%X{spanId:-}] - %msg%n"
+  file:
+    name: /var/log/moderation-service/application.log
+    max-size: 100MB
+    max-history: 30
+
+# Production management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: never
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  health:
+    db:
+      enabled: true
+
+# Security
+server:
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never 

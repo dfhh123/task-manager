@@ -1,0 +1,69 @@
+# Task Service Configuration
+# Использует базовые шаблоны и специфичные настройки
+
+# Импорт базовых шаблонов
+spring:
+  config:
+    import:
+      - optional:classpath:/templates/base-service.yml
+      - optional:classpath:/templates/kafka.yml
+
+# Специфичные настройки для Task Service
+server:
+  port: 8082
+
+spring:
+  application:
+    name: task-service
+  
+  # MongoDB настройки
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/taskdb}
+      database: ${MONGODB_DATABASE:taskdb}
+      auto-index-creation: true
+      write-concern: ${MONGODB_WRITE_CONCERN:ACKNOWLEDGED}
+      read-preference: ${MONGODB_READ_PREFERENCE:PRIMARY}
+  
+  # Kafka настройки для Task Service
+  kafka:
+    consumer:
+      group-id: task-service-group
+      topics: user-events,task-events
+    producer:
+      topic: task-events
+
+# Task Service специфичные настройки
+task:
+  service:
+    # Настройки для обработки задач
+    batch-size: ${TASK_BATCH_SIZE:100}
+    processing-timeout: ${TASK_PROCESSING_TIMEOUT:30000}
+    retry-attempts: ${TASK_RETRY_ATTEMPTS:3}
+    
+    # Настройки уведомлений
+    notification:
+      enabled: ${TASK_NOTIFICATION_ENABLED:true}
+      template-path: ${TASK_TEMPLATE_PATH:classpath:/templates/}
+    
+    # Настройки кэширования
+    cache:
+      ttl: ${TASK_CACHE_TTL:3600}
+      max-size: ${TASK_CACHE_MAX_SIZE:1000}
+
+# Мониторинг для Task Service
+management:
+  metrics:
+    tags:
+      service: task-service
+      version: ${SERVICE_VERSION:1.0.0}
+  custom:
+    task-metrics:
+      enabled: true
+      collection-interval: 30s
+
+# Логирование для Task Service
+logging:
+  level:
+    com.home.task: ${TASK_LOG_LEVEL:INFO}
+    org.springframework.data.mongodb: ${MONGODB_LOG_LEVEL:INFO}

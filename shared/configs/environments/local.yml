@@ -1,0 +1,54 @@
+# Локальная среда разработки
+spring:
+  profiles:
+    active: local
+  
+  # Локальные настройки БД
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  
+  # MongoDB для локальной разработки
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/taskdb_local
+  
+  # H2 Console для разработки
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# Отключение Flyway для локальной разработки
+flyway:
+  enabled: false
+
+# Локальные настройки Kafka
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+
+# Локальные настройки Eureka
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+# Упрощенное логирование для разработки
+logging:
+  level:
+    com.home: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.kafka: DEBUG
+    org.mongodb.driver: DEBUG
+
+# Отключение некоторых проверок для локальной разработки
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,0 +1,49 @@
+# Task Service - Docker Configuration
+# Использует настройки для Docker окружения
+
+# Импорт базовых шаблонов
+spring:
+  config:
+    import:
+      - optional:classpath:/templates/base-service.yml
+      - optional:classpath:/templates/kafka.yml
+
+# Специфичные настройки для Docker
+server:
+  port: 8082
+
+spring:
+  application:
+    name: task-service
+  
+  # MongoDB для Docker
+  data:
+    mongodb:
+      uri: mongodb://mongodb:27017/taskdb
+      database: taskdb
+      auto-index-creation: true
+  
+  # Kafka для Docker
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: task-service-docker-group
+
+# Docker настройки Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+
+# Docker настройки Config Server
+spring:
+  cloud:
+    config:
+      uri: http://config-server:8888
+
+# Docker логирование
+logging:
+  level:
+    com.home.task: INFO
+    org.springframework.data.mongodb: INFO
+    org.springframework.web: WARN

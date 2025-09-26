@@ -1,0 +1,14 @@
+{
+  "type": "record",
+  "name": "ActivityCreatedDomainEvent",
+  "namespace": "com.home.avro.event.activity",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    }
+  ]
+}

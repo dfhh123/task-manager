@@ -1,0 +1,14 @@
+{
+  "namespace": "com.home.avro.event.user",
+  "type": "record",
+  "name": "UserDeletedDomainEvent",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    }
+  ]
+}

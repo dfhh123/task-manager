@@ -1,0 +1,38 @@
+# Тестовая конфигурация для проверки переключения профилей
+
+spring:
+  profiles:
+    active: test
+  application:
+    name: user-service-test
+
+# Настройки для тестирования без Keycloak (собственная JWT аутентификация)
+app:
+  jwt:
+    secret: test-secret-key-for-jwt-token-generation-and-validation
+
+# Настройки для тестирования с Keycloak
+keycloak:
+  url: http://localhost:8080
+  realm: event-platform
+  client-id: user-service
+  client-secret: test-client-secret
+
+# Отключение внешних зависимостей для тестов
+eureka:
+  client:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.home: DEBUG
+    org.springframework.security: DEBUG

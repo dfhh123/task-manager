@@ -1,0 +1,15 @@
+# Amplicode files
+amplicode.xml
+
+# IDE files
+.idea/
+.vscode/
+
+# Maven target directories
+**/target/
+
+# Node modules
+node_modules/
+
+# Build artifacts
+*.iml

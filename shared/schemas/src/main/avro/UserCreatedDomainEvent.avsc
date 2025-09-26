@@ -1,0 +1,16 @@
+{
+  "namespace": "com.home.avro.event.user",
+  "type": "record",
+  "name": "UserCreatedDomainEvent",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {"name": "email", "type": "string", "doc": "user email"},
+    {"name": "username", "type": "string", "doc":  "user name"}
+  ]
+}
