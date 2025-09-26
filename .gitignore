@@ -1,15 +1,54 @@
-# Amplicode files
+# Amplicode
 amplicode.xml
 
-# IDE files
+# IDE
 .idea/
 .vscode/
-
-# Maven target directories
-**/target/
-
-# Node modules
-node_modules/
-
-# Build artifacts
 *.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs & temp
+*.log
+*.pid
+*.seed
+*.pid.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+.eslintcache
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Java / Gradle / Kotlin
+.gradle/
+**/build/
+**/out/
+**/target/
+.classpath
+.project
+.settings/
+
+# Node / Frontend
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
+.cache/
+.vite/
+coverage/
+
+# Misc tools
+.parcel-cache/
+.turbo/
