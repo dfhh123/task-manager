@@ -9,7 +9,44 @@ amplicode.xml
 **/target/
 
 # Node modules
-node_modules/
+# (use monorepo pattern below)
 
 # Build artifacts
 *.iml
+
+# Gradle
+**/.gradle/
+**/build/
+
+# IntelliJ IDEA
+*.ipr
+*.iws
+
+# Node (monorepo)
+**/node_modules/
+**/dist/
+**/coverage/
+
+# TypeScript
+*.tsbuildinfo
+
+# Linters
+.eslintcache
+
+# Java/Kotlin build outputs
+*.class
+**/out/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+**/logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
