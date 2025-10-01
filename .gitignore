@@ -1,54 +1,52 @@
-# Amplicode
+# Amplicode files
 amplicode.xml
 
-# IDE
+# IDE files
 .idea/
 .vscode/
+
+# Maven target directories
+**/target/
+
+# Node modules
+# (use monorepo pattern below)
+
+# Build artifacts
 *.iml
+
+# Gradle
+**/.gradle/
+**/build/
+
+# IntelliJ IDEA
 *.ipr
 *.iws
 
-# OS
-.DS_Store
-Thumbs.db
+# Node (monorepo)
+**/node_modules/
+**/dist/
+**/coverage/
 
-# Logs & temp
-*.log
-*.pid
-*.seed
-*.pid.lock
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# TypeScript
 *.tsbuildinfo
+
+# Linters
 .eslintcache
 
-# Env
+# Java/Kotlin build outputs
+*.class
+**/out/
+
+# Env files
 .env
 .env.*
 !.env.example
 
-# Java / Gradle / Kotlin
-.gradle/
-**/build/
-**/out/
-**/target/
-.classpath
-.project
-.settings/
+# Logs
+*.log
+**/logs/
 
-# Node / Frontend
-node_modules/
-**/node_modules/
-dist/
-**/dist/
-build/
-**/build/
-.cache/
-.vite/
-coverage/
-
-# Misc tools
-.parcel-cache/
-.turbo/
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
