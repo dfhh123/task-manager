@@ -1,0 +1,48 @@
+# Normalize line endings: keep LF in repo and let Git auto-detect text
+* text=auto
+
+# Enforce LF for scripts and config
+*.sh text eol=lf
+*.ps1 text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.gradle text eol=lf
+*.kts text eol=lf
+*.kt text eol=lf
+*.java text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.html text eol=lf
+*.env.example text eol=lf
+*.avsc text eol=lf
+
+# Mark binaries
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.jar binary
+*.zip binary
+*.gz binary
+*.7z binary
+
+# Avoid merging lockfiles (prefer ours to reduce conflicts)
+package-lock.json merge=ours
+pnpm-lock.yaml merge=ours
+yarn.lock merge=ours
+
+# Keep patch files' original newlines
+*.patch -text
