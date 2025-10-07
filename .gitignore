@@ -36,6 +36,9 @@ amplicode.xml
 # Java/Kotlin build outputs
 *.class
 **/out/
+# but keep adapters/out (hexagonal adapters) tracked
+!**/src/**/adapters/out/
+!**/src/**/adapters/out/**
 
 # Env files
 .env
