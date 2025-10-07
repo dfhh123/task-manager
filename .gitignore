@@ -36,6 +36,7 @@ amplicode.xml
 # Java/Kotlin build outputs
 *.class
 **/out/
+!**/src/**/out/
 
 # Env files
 .env
