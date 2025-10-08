@@ -1,4 +1,4 @@
-package com.home.repository;
+package com.home.repository
 
 import com.home.entity.Task
 import org.springframework.data.mongodb.repository.MongoRepository
