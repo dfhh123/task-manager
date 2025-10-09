@@ -5,15 +5,17 @@ import com.home.userservice.application.dto.UserDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.UUID;
+
 public interface UserService {
 
-    UserDto delete(Long id);
+    UserDto delete(UUID id);
 
     UserDto create(UserDto dto);
 
-    UserDto update(Long id, UserDto dto);
+    UserDto update(UUID id, UserDto dto);
 
-    UserDto getOne(Long id);
+    UserDto getOne(UUID id);
 
     Page<UserDto> getAll(UserFilter filter, Pageable pageable);
 }

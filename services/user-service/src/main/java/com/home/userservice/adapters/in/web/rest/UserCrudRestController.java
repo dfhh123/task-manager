@@ -11,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
-@RequestMapping("/users")
+@RequestMapping("api/rest/v1/users")
 @RequiredArgsConstructor
 @Validated
 public class UserCrudRestController {
@@ -21,7 +23,7 @@ public class UserCrudRestController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public UserDto delete(@PathVariable Long id) {
+    public UserDto delete(@PathVariable UUID id) {
         return userService.delete(id);
     }
 
@@ -33,13 +35,13 @@ public class UserCrudRestController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto update(@PathVariable Long id, @RequestBody @Valid UserDto dto) {
+    public UserDto update(@PathVariable UUID id, @RequestBody @Valid UserDto dto) {
         return userService.update(id, dto);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getOne(@PathVariable Long id) {
+    public UserDto getOne(@PathVariable UUID id) {
         return userService.getOne(id);
     }
 
