@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public UserDto delete(Long id) {
+    public UserDto delete(UUID id) {
         User user = userRepository.findById(id).orElseThrow(()
                 -> new UserNotFoundException("User with id `%s` not found".formatted(id)));
         if (user != null) {
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto update(Long id, UserDto dto) {
+    public UserDto update(UUID id, UserDto dto) {
         User user = userRepository.findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id)));
         userMapper.updateWithNull(dto, user);
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getOne(Long id) {
+    public UserDto getOne(UUID id) {
         Optional<User> userOptional = userRepository.findById(id);
         return userMapper.toUserDto(userOptional.orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id))));
