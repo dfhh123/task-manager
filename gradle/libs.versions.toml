@@ -1,5 +1,5 @@
 [versions]
-spring-boot = "3.3.5"
+spring-boot = "3.5.6"
 postgres = "42.7.4"
 junit = "5.11.3"
 
