@@ -1,6 +1,7 @@
 package com.home.entity
 
 import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
@@ -12,27 +13,29 @@ import java.util.*
 data class Task(
     @Id
     @Field("_id")
-    val id: UUID,
+    var id: UUID,
+
+    @Field("user_id")
+    var linkedUserId: UUID,
 
     @Field("name")
-    @param:NotBlank(message = "Title is required")
+    @param:NotNull(message = "Title is required")
     @param:Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
-    val title: String,
+    var title: String,
 
     @Field("description")
     @param:Size(max = 1000, message = "Description must not exceed 1000 characters")
-    val description: String,
+    var description: String,
 
-    @Field("due")
-    val status: TaskStatus,
-
+    @Field("status")
+    var status: TaskStatus = TaskStatus.PENDING,
 
     @Field("priority")
     @param:NotBlank(message = "Priority is required")
-    val priority: TaskPriority,
+    var priority: TaskPriority = TaskPriority.LOW,
 
     @Field("deadline")
-    val deadline: LocalDateTime
+    var deadline: LocalDateTime
 
 )
 

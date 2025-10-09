@@ -3,6 +3,7 @@ package com.home.service
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.home.entity.Task
+import com.home.entity.TaskCreateDto
 import com.home.entity.TaskDto
 import com.home.entity.TaskMapper
 import com.home.repository.TaskRepository
@@ -27,7 +28,12 @@ class TaskServiceImpl(
         })
     }
 
-    override fun create(dto: TaskDto): TaskDto {
+    override fun findManyByLinkedUserId(linkedUserId: UUID): List<TaskDto> {
+        return taskRepository.findAllByLinkedUserId(linkedUserId).stream().map { taskMapper.toTaskDto(it) }
+            .toList()
+    }
+
+    override fun create(dto: TaskCreateDto): TaskDto {
         val task: Task = taskMapper.toEntity(dto)
         val resultTask: Task = taskRepository.save(task)
         return taskMapper.toTaskDto(resultTask)

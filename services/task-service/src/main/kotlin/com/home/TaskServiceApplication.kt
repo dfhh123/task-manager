@@ -6,7 +6,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 
 @SpringBootApplication
 @EnableDiscoveryClient
-class TaskServiceApplication
+open class TaskServiceApplication
 
 fun main(args: Array<String>) {
     runApplication<TaskServiceApplication>(*args)

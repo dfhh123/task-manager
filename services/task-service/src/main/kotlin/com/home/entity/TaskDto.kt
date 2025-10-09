@@ -8,9 +8,9 @@ import java.util.*
  */
 data class TaskDto(
     val id: UUID,
+    val linkedUserId: UUID,
     val title: String,
     val description: String,
-    val status: TaskStatus,
     val priority: TaskPriority,
     val deadline: LocalDateTime
 )
