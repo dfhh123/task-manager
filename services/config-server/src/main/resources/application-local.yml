@@ -3,4 +3,6 @@ spring:
     config:
       server:
         native:
-          searchLocations: file:///${user.home}/dev/super-pet/event-platform/config/cloud/{application}
+          search-locations:
+            - file:./shared/configs/
+            - file:../../../shared/configs/
