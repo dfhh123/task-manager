@@ -1,6 +1,9 @@
 # Amplicode
 amplicode.xml
 
+# Cursor
+.cursor
+
 # IDE
 .idea/
 .vscode/
