@@ -3,6 +3,13 @@ amplicode.xml
 
 # Cursor
 .cursor
+.cursor/
+
+# Backup files
+*~
+*.bak
+*.swp
+*.swo
 
 # IDE
 .idea/
