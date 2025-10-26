@@ -3,22 +3,16 @@ package com.home.userservice.application.dto;
 import com.home.userservice.domain.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-
-import java.time.LocalDateTime;
 
 /**
  * DTO for {@link User}
  */
-public record UserDto(
+public record UserCreateRequestDto(
 
         @Email @NotBlank String email,
 
-        @Size(min = 3, max = 3) @NotBlank String language,
+        @NotBlank String language,
 
-        @NotBlank String timezone,
+        @NotBlank String timezone)
 
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt)
 {}

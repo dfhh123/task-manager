@@ -2,11 +2,15 @@ package com.home.service
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.home.avro.event.task.TaskCreatedEvent
+import com.home.avro.event.task.TaskDeletedEvent
+import com.home.avro.event.task.TaskUpdatedEvent
 import com.home.entity.Task
 import com.home.entity.TaskCreateDto
 import com.home.entity.TaskDto
 import com.home.entity.TaskMapper
 import com.home.repository.TaskRepository
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -18,7 +22,8 @@ import java.util.UUID
 class TaskServiceImpl(
     private val taskMapper: TaskMapper,
     private val taskRepository: TaskRepository,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val eventPublisher: ApplicationEventPublisher
 ) : TaskService {
 
     override fun getOne(id: UUID): TaskDto {
@@ -36,6 +41,7 @@ class TaskServiceImpl(
     override fun create(dto: TaskCreateDto): TaskDto {
         val task: Task = taskMapper.toEntity(dto)
         val resultTask: Task = taskRepository.save(task)
+        eventPublisher.publishEvent(TaskCreatedEvent(resultTask.id))
         return taskMapper.toTaskDto(resultTask)
     }
 
@@ -48,6 +54,7 @@ class TaskServiceImpl(
         objectMapper.readerForUpdating(taskDto).readValue<TaskDto>(patchNode)
         taskMapper.updateWithNull(taskDto, task)
         val resultTask: Task = taskRepository.save(task)
+        eventPublisher.publishEvent(TaskUpdatedEvent(resultTask.id))
         return taskMapper.toTaskDto(resultTask)
     }
 
@@ -57,6 +64,7 @@ class TaskServiceImpl(
         }
         taskMapper.updateWithNull(dto, task)
         val resultTask: Task = taskRepository.save(task)
+        eventPublisher.publishEvent(TaskUpdatedEvent(resultTask.id))
         return taskMapper.toTaskDto(resultTask)
     }
 
@@ -64,6 +72,7 @@ class TaskServiceImpl(
         val task: Task? = taskRepository.findById(id).orElse(null)
         if (task != null) {
             taskRepository.delete(task)
+            eventPublisher.publishEvent(TaskDeletedEvent(task.id))
         }
         return task?.let(taskMapper::toTaskDto)
     }

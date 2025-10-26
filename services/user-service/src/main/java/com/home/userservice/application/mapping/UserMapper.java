@@ -1,5 +1,6 @@
 package com.home.userservice.application.mapping;
 
+import com.home.userservice.application.dto.UserCreateRequestDto;
 import com.home.userservice.application.dto.UserDto;
 import com.home.userservice.domain.entity.User;
 import org.mapstruct.Mapper;
@@ -13,4 +14,8 @@ public interface UserMapper {
     User toEntity(UserDto userDto);
 
     User updateWithNull(UserDto userDto, @MappingTarget User user);
+
+    User toEntity(UserCreateRequestDto userCreateRequestDto);
+
+    UserCreateRequestDto toUserCreateRequestDto(User user);
 }

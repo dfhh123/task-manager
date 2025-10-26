@@ -31,7 +31,7 @@ data class Task(
     var status: TaskStatus = TaskStatus.PENDING,
 
     @Field("priority")
-    @param:NotBlank(message = "Priority is required")
+    @param:NotNull(message = "Priority is required")
     var priority: TaskPriority = TaskPriority.LOW,
 
     @Field("deadline")

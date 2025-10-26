@@ -1,46 +1,77 @@
--- Create users table
+-- =====================================================
+-- User Service Database Schema - Keycloak Integration
+-- =====================================================
+-- This table stores minimal USER PROFILE data.
+-- Authentication (username, password, roles) is handled by Keycloak.
+-- The keycloak_id column links this profile to Keycloak user.
+-- 
+-- This is a minimal version with essential fields only.
+-- Additional fields can be added later as needed.
+-- =====================================================
+
 CREATE TABLE users (
+    -- Primary Key
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    username VARCHAR(50) UNIQUE NOT NULL,
+    
+    -- ⭐ REQUIRED: Link to Keycloak user (subject claim from JWT)
+    keycloak_id VARCHAR(255) UNIQUE NOT NULL,
+    
+    -- Basic Profile Info (synced from Keycloak)
     email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    first_name VARCHAR(100),
-    last_name VARCHAR(100),
-    role VARCHAR(20) NOT NULL DEFAULT 'USER',
-    is_active BOOLEAN NOT NULL DEFAULT true,
-    is_email_verified BOOLEAN NOT NULL DEFAULT false,
+    
+    -- User Preferences
+    timezone VARCHAR(50) NOT NULL DEFAULT 'UTC',
+    language VARCHAR(10) NOT NULL DEFAULT 'en',
+    
+    -- Metadata
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_login_at TIMESTAMP,
-    keycloak_id VARCHAR(255),
-    phone_number VARCHAR(20),
-    date_of_birth DATE,
-    profile_picture_url VARCHAR(500),
-    bio TEXT,
-    timezone VARCHAR(50) DEFAULT 'UTC',
-    language VARCHAR(10) DEFAULT 'en',
-    notification_preferences JSONB,
-    privacy_settings JSONB
+    
+    -- Constraints
+    CONSTRAINT email_format_check CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
+    CONSTRAINT timezone_not_empty CHECK (length(timezone) > 0),
+    CONSTRAINT language_valid CHECK (length(language) BETWEEN 2 AND 10)
 );
 
--- Create indexes for better performance
-CREATE INDEX idx_users_username ON users(username);
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_role ON users(role);
-CREATE INDEX idx_users_is_active ON users(is_active);
-CREATE INDEX idx_users_keycloak_id ON users(keycloak_id);
-CREATE INDEX idx_users_created_at ON users(created_at);
+-- =====================================================
+-- Indexes for Performance
+-- =====================================================
 
--- Create trigger for updating updated_at timestamp
+-- Most important: fast lookup by Keycloak ID (used in every authenticated request)
+CREATE UNIQUE INDEX idx_users_keycloak_id ON users(keycloak_id);
+
+-- Lookup by email (for admin operations and sync)
+CREATE UNIQUE INDEX idx_users_email ON users(email);
+
+-- Sorting by creation date
+CREATE INDEX idx_users_created_at ON users(created_at DESC);
+
+-- =====================================================
+-- Triggers
+-- =====================================================
+
+-- Auto-update updated_at timestamp on row modification
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = CURRENT_TIMESTAMP;
     RETURN NEW;
 END;
-$$ language 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_users_updated_at 
     BEFORE UPDATE ON users 
     FOR EACH ROW 
     EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================
+-- Comments for Documentation
+-- =====================================================
+
+COMMENT ON TABLE users IS 'Minimal user profiles synchronized with Keycloak. Authentication is handled by Keycloak.';
+COMMENT ON COLUMN users.keycloak_id IS 'Keycloak user ID (sub claim from JWT token). Primary link to Keycloak user.';
+COMMENT ON COLUMN users.email IS 'User email address. Synchronized from Keycloak on user creation/update.';
+COMMENT ON COLUMN users.timezone IS 'User timezone preference (e.g., UTC, Europe/London, America/New_York).';
+COMMENT ON COLUMN users.language IS 'User language preference (ISO 639-1 code, e.g., en, ru, es).';
+COMMENT ON COLUMN users.created_at IS 'Timestamp when user profile was created.';
+COMMENT ON COLUMN users.updated_at IS 'Timestamp when user profile was last updated. Auto-updated by trigger.';

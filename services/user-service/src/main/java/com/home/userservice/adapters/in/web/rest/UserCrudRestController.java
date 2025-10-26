@@ -1,6 +1,5 @@
 package com.home.userservice.adapters.in.web.rest;
 
-import com.home.userservice.application.dto.UserDto;
 import com.home.userservice.application.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +22,8 @@ public class UserCrudRestController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public UserDto delete(@PathVariable UUID id) {
-        return userService.delete(id);
+    public void delete(@PathVariable UUID id) {
+         userService.delete(id);
     }
 
     @PostMapping

@@ -1,12 +1,15 @@
 package com.home.userservice.application.service;
 
+import com.home.avro.event.user.UserCreatedEvent;
+import com.home.avro.event.user.UserDeletedEvent;
+import com.home.avro.event.user.UserUpdatedEvent;
 import com.home.userservice.adapters.in.web.rest.UserFilter;
-import com.home.userservice.application.dto.UserDto;
 import com.home.userservice.application.mapping.UserMapper;
 import com.home.userservice.adapters.out.persistence.jpa.UserRepository;
 import com.home.userservice.domain.entity.User;
 import com.home.userservice.errors.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,6 +26,8 @@ import java.util.UUID;
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    private final ApplicationEventPublisher eventPublisher;
+
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
@@ -34,6 +39,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             userRepository.delete(user);
         }
+        eventPublisher.publishEvent(new UserDeletedEvent(id));
         return userMapper.toUserDto(user);
     }
 
@@ -41,6 +47,7 @@ public class UserServiceImpl implements UserService {
     public UserDto create(UserDto dto) {
         User user = userMapper.toEntity(dto);
         User resultUser = userRepository.save(user);
+        eventPublisher.publishEvent(new UserCreatedEvent(dto.id(), dto.email()));
         return userMapper.toUserDto(resultUser);
     }
 
@@ -50,6 +57,7 @@ public class UserServiceImpl implements UserService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id)));
         userMapper.updateWithNull(dto, user);
         User resultUser = userRepository.save(user);
+        eventPublisher.publishEvent(new UserUpdatedEvent(dto.id(), dto.email()));
         return userMapper.toUserDto(resultUser);
     }
 
