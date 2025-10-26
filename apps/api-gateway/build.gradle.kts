@@ -3,8 +3,8 @@ plugins {
 }
 
 dependencies {
-    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation(libs.spring.cloud.gateway)
+    implementation(libs.spring.cloud.eureka)
+    testImplementation(libs.spring.boot.starter.test)
 }
 

@@ -1,7 +1,7 @@
 {
   "type": "record",
-  "name": "ActivityCreatedDomainEvent",
-  "namespace": "com.home.avro.event.activity",
+  "name": "TaskCreatedEvent",
+  "namespace": "com.home.avro.event.task",
   "fields": [
     {
       "name": "id",

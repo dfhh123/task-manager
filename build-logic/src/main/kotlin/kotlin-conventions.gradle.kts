@@ -1,5 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.kapt")
 }
 
 repositories {
@@ -9,4 +10,3 @@ repositories {
 kotlin {
     jvmToolchain(21)
 }
-

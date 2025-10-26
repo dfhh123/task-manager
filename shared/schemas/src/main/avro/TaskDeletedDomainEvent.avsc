@@ -1,7 +1,7 @@
 {
   "type": "record",
-  "name": "ActivityDeletedDomainEvent",
-  "namespace": "com.home.avro.event.activity",
+  "name": "TaskDeletedEvent",
+  "namespace": "com.home.avro.event.task",
   "fields": [
     {
       "name": "id",

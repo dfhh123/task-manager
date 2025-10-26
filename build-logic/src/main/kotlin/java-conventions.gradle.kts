@@ -6,9 +6,6 @@ repositories {
     mavenCentral()
 }
 
-group = "com.home"
-version = "1.0-SNAPSHOT"
-
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))

@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation(libs.spring.cloud.eureka.server)
+    testImplementation(libs.spring.boot.starter.test)
 }
