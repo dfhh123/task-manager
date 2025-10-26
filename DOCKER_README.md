@@ -1,29 +1,29 @@
 # 🐳 Docker Deployment Guide
 
-Полное руководство по развертыванию Super Pet Platform с использованием Docker Compose.
+Complete guide for deploying Super Pet Platform using Docker Compose.
 
-## 📋 Содержание
+## 📋 Table of Contents
 
-- [Требования](#требования)
-- [Быстрый старт](#быстрый-старт)
-- [Архитектура](#архитектура)
-- [Управление сервисами](#управление-сервисами)
-- [Конфигурация](#конфигурация)
-- [Отладка](#отладка)
+- [Requirements](#requirements)
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)
+- [Service Management](#service-management)
+- [Configuration](#configuration)
+- [Debugging](#debugging)
 - [Troubleshooting](#troubleshooting)
 
 ---
 
-## 🔧 Требования
+## 🔧 Requirements
 
-### Минимальные требования:
+### Minimum Requirements:
 - **Docker**: 24.0+
 - **Docker Compose**: 2.20+
-- **RAM**: 8 GB (рекомендуется 16 GB)
-- **Disk**: 20 GB свободного места
-- **CPU**: 4 cores (рекомендуется)
+- **RAM**: 8 GB (16 GB recommended)
+- **Disk**: 20 GB free space
+- **CPU**: 4 cores (recommended)
 
-### Проверка версий:
+### Check Versions:
 ```bash
 docker --version
 docker-compose --version
@@ -31,71 +31,68 @@ docker-compose --version
 
 ---
 
-## 🚀 Быстрый старт
+## 🚀 Quick Start
 
-### 1. Сборка и запуск всех сервисов
+### 1. Build and Start All Services
 
 ```bash
-# Сборка всех сервисов
-./scripts/docker-build.sh
+# Windows (PowerShell)
+.\scripts\build.ps1
+.\scripts\start.ps1
 
-# Запуск
-./scripts/docker-start.sh
+# Or manually
+docker-compose up -d --build
 ```
 
-### 2. Проверка статуса
+### 2. Check Status
 
 ```bash
 docker-compose ps
 ```
 
-### 3. Доступ к сервисам
+### 3. Access Services
 
-| Сервис | URL | Описание |
-|--------|-----|----------|
-| 🌐 Frontend | http://localhost:3000 | React приложение |
-| 🔗 API Gateway | http://localhost:8080 | Единая точка входа |
-| 👤 User Service | http://localhost:8081 | Управление пользователями |
-| ✅ Task Service | http://localhost:8082 | Управление задачами |
-| 📧 Notification Service | http://localhost:8084 | Уведомления |
+| Service | URL | Description |
+|---------|-----|-------------|
+| 🌐 Frontend | http://localhost:3000 | React application |
+| 🔗 API Gateway | http://localhost:8080 | Single entry point |
 | 🔐 Keycloak | http://localhost:8180 | IAM (admin/admin) |
 | 🔍 Eureka | http://localhost:8761 | Service Discovery |
-| 📧 MailHog | http://localhost:8025 | Email тестирование |
-| 📊 Schema Registry | http://localhost:8081 | Avro схемы |
+| 📧 MailHog | http://localhost:8025 | Email testing |
+| 📊 Schema Registry | http://localhost:8081 | Avro schemas |
 
 ---
 
-## 🏗️ Архитектура
+## 🏗️ Architecture
 
-### Порядок запуска сервисов:
+### Service Startup Order:
 
 ```
-1. Инфраструктура (параллельно):
+1. Infrastructure (parallel):
    ├── PostgreSQL
    ├── MongoDB
    ├── Redis
-   ├── Zookeeper
-   └── Kafka → Schema Registry
+   └── Kafka (KRaft mode) → Schema Registry
 
 2. Config Server
-   └── Централизованная конфигурация
+   └── Centralized configuration
 
 3. Discovery Server (Eureka)
    └── Service Registry
 
-4. Business Services (параллельно):
+4. Business Services (parallel):
    ├── User Service
    ├── Task Service
    └── Notification Service
 
 5. API Gateway
-   └── Маршрутизация запросов
+   └── Request routing
 
 6. Frontend
-   └── UI приложение
+   └── UI application
 ```
 
-### Зависимости между сервисами:
+### Service Dependencies:
 
 ```mermaid
 graph TD
@@ -122,92 +119,92 @@ graph TD
 
 ---
 
-## 🎮 Управление сервисами
+## 🎮 Service Management
 
-### Скрипты управления
+### Management Scripts
 
-#### Сборка
+#### Build
 ```bash
-./scripts/docker-build.sh
+.\scripts\build.ps1
 ```
-Компилирует Java/Kotlin сервисы и создает Docker образы.
+Compiles Java/Kotlin services and creates Docker images.
 
-#### Запуск
+#### Start
 ```bash
-./scripts/docker-start.sh
+.\scripts\start.ps1
 ```
-Запускает все сервисы в правильном порядке.
+Starts all services in the correct order.
 
-#### Остановка
+#### Stop
 ```bash
-./scripts/docker-stop.sh
+.\scripts\stop.ps1
 ```
-Останавливает все сервисы.
+Stops all services.
 
-#### Очистка
+#### Clean
 ```bash
-./scripts/docker-clean.sh
+.\scripts\clean.ps1
 ```
-⚠️ Удаляет все контейнеры, образы и данные!
+⚠️ Removes all containers, images, and data!
 
-#### Просмотр логов
+#### View Logs
 ```bash
-# Все сервисы
+# All services
 docker-compose logs -f
 
-# Конкретный сервис
-./scripts/docker-logs.sh api-gateway
+# Specific service
+.\scripts\logs.ps1 api-gateway
 
-# Последние 100 строк
+# Last 100 lines
 docker-compose logs --tail=100 user-service
 ```
 
-### Docker Compose команды
+### Docker Compose Commands
 
 ```bash
-# Запуск всех сервисов
+# Start all services
 docker-compose up -d
 
-# Запуск конкретного сервиса
+# Start specific service
 docker-compose up -d user-service
 
-# Остановка всех сервисов
+# Stop all services
 docker-compose down
 
-# Остановка и удаление volumes
+# Stop and remove volumes
 docker-compose down -v
 
-# Пересборка конкретного сервиса
+# Rebuild specific service
 docker-compose build user-service
 
-# Перезапуск сервиса
+# Restart service
 docker-compose restart api-gateway
 
-# Просмотр статуса
+# View status
 docker-compose ps
 
-# Просмотр потребления ресурсов
+# View resource usage
 docker stats
 ```
 
 ---
 
-## ⚙️ Конфигурация
+## ⚙️ Configuration
 
 ### Environment Variables
 
-Основные переменные окружения настраиваются в `docker-compose.yml`.
+Main environment variables are configured in `docker-compose.yml`.
 
-#### Изменение портов:
+#### Change Ports:
 
 ```yaml
 services:
   frontend:
     ports:
-      - "3001:80"  # Изменить на свой порт
+      - "3001:80"  # Change to your port
 ```
 
-#### Настройка баз данных:
+#### Database Configuration:
 
 ```yaml
 postgres:
@@ -215,20 +212,20 @@ postgres:
     POSTGRES_PASSWORD: your-secure-password
 ```
 
-#### Настройка Kafka:
+#### Kafka Configuration:
 
 ```yaml
 kafka:
   environment:
-    KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3  # Для production
+    KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3  # For production
 ```
 
-### Профили окружения
+### Environment Profiles
 
 #### Production
 
 ```bash
-# Создайте .env файл
+# Create .env file
 cat > .env << EOF
 SPRING_PROFILES_ACTIVE=production
 DATABASE_PASSWORD=secure-password
@@ -239,25 +236,25 @@ EOF
 docker-compose --env-file .env up -d
 ```
 
-#### Development с hot reload
+#### Development with Hot Reload
 
 ```bash
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
 
-Включает:
-- Debug порты для Java сервисов (5005-5010)
-- Hot reload для frontend
-- Детальное логирование
+Enables:
+- Debug ports for Java services (5005-5010)
+- Hot reload for frontend
+- Detailed logging
 
 ---
 
-## 🐛 Отладка
+## 🐛 Debugging
 
-### Debug порты (в dev режиме)
+### Debug Ports (in dev mode)
 
-| Сервис | Debug Port |
-|--------|-----------|
+| Service | Debug Port |
+|---------|-----------|
 | Config Server | 5005 |
 | Discovery Server | 5006 |
 | User Service | 5007 |
@@ -265,36 +262,35 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 | Notification Service | 5009 |
 | API Gateway | 5010 |
 
-### Подключение IntelliJ IDEA
+### IntelliJ IDEA Connection
 
 1. Run → Edit Configurations
 2. Add New → Remote JVM Debug
 3. Host: localhost
-4. Port: 5007 (для User Service)
+4. Port: 5007 (for User Service)
 5. Debug
 
 ### Health Checks
 
 ```bash
-# Проверка здоровья сервисов
+# Check service health
 curl http://localhost:8080/actuator/health
-curl http://localhost:8081/actuator/health
-curl http://localhost:8082/actuator/health
+curl http://localhost:8761/actuator/health
 
-# Проверка всех health checks
+# Check all health checks
 docker-compose ps
 ```
 
-### Просмотр логов с фильтрацией
+### View Logs with Filtering
 
 ```bash
-# Только ошибки
+# Errors only
 docker-compose logs | grep ERROR
 
-# Логи за последний час
+# Logs from last hour
 docker-compose logs --since 1h
 
-# Логи до определенного времени
+# Logs until specific time
 docker-compose logs --until 2024-01-01T12:00:00
 ```
 
@@ -302,123 +298,123 @@ docker-compose logs --until 2024-01-01T12:00:00
 
 ## 🔥 Troubleshooting
 
-### Проблема: Сервисы не запускаются
+### Issue: Services Won't Start
 
-**Решение:**
+**Solution:**
 ```bash
-# Проверить логи
+# Check logs
 docker-compose logs
 
-# Проверить доступные ресурсы
+# Check available resources
 docker system df
 
-# Очистить неиспользуемые ресурсы
+# Clean unused resources
 docker system prune -a --volumes
 ```
 
-### Проблема: Ошибка "port is already allocated"
+### Issue: "port is already allocated" Error
 
-**Решение:**
+**Solution:**
 ```bash
-# Найти процесс, использующий порт
+# Find process using port
 lsof -i :8080  # Linux/Mac
 netstat -ano | findstr :8080  # Windows
 
-# Остановить сервисы и изменить порты в docker-compose.yml
+# Stop services and change ports in docker-compose.yml
 ```
 
-### Проблема: Out of Memory
+### Issue: Out of Memory
 
-**Решение:**
+**Solution:**
 ```bash
-# Увеличить память для Docker Desktop
+# Increase memory for Docker Desktop
 # Settings → Resources → Memory → 8GB+
 
-# Или ограничить память для конкретных сервисов
+# Or limit memory for specific services
 services:
   user-service:
     mem_limit: 512m
     mem_reservation: 256m
 ```
 
-### Проблема: Config Server не может найти конфигурацию
+### Issue: Config Server Can't Find Configuration
 
-**Решение:**
+**Solution:**
 ```bash
-# Проверить volume mapping
+# Check volume mapping
 docker-compose exec config-server ls -la /config
 
-# Проверить логи
+# Check logs
 docker-compose logs config-server
 
-# Проверить, что файлы существуют
+# Verify files exist
 ls -la shared/configs/
 ```
 
-### Проблема: Kafka не может подключиться
+### Issue: Kafka Connection Failed
 
-**Решение:**
+**Solution:**
 ```bash
-# Проверить, что Zookeeper запущен
-docker-compose ps zookeeper
+# Check Kafka status
+docker-compose ps kafka
 
-# Перезапустить Kafka
+# Restart Kafka
 docker-compose restart kafka
 
-# Проверить топики
+# Check topics
 docker-compose exec kafka kafka-topics --list --bootstrap-server localhost:9092
 ```
 
-### Проблема: База данных не инициализируется
+### Issue: Database Not Initializing
 
-**Решение:**
+**Solution:**
 ```bash
-# Удалить volumes и пересоздать
+# Remove volumes and recreate
 docker-compose down -v
 docker-compose up -d postgres mongodb
 
-# Проверить логи инициализации
+# Check initialization logs
 docker-compose logs postgres
 docker-compose logs mongodb
 ```
 
 ---
 
-## 📊 Мониторинг
+## 📊 Monitoring
 
-### Prometheus метрики
+### Prometheus Metrics
 
-Все сервисы экспортируют метрики:
+All services export metrics:
 ```bash
-curl http://localhost:8081/actuator/prometheus
+curl http://localhost:8080/actuator/prometheus
 ```
 
-### Логирование
+### Logging
 
-Логи доступны через:
+Logs available via:
 ```bash
-# Real-time логи
+# Real-time logs
 docker-compose logs -f
 
-# Экспорт логов в файл
+# Export logs to file
 docker-compose logs > logs.txt
 ```
 
 ---
 
-## 🔒 Безопасность
+## 🔒 Security
 
-### Production checklist:
+### Production Checklist:
 
-- [ ] Изменить пароли баз данных
-- [ ] Использовать secrets для чувствительных данных
-- [ ] Включить HTTPS для API Gateway
-- [ ] Настроить Kafka SSL/SASL
-- [ ] Ограничить exposed порты
-- [ ] Использовать non-root пользователей (уже настроено)
-- [ ] Регулярно обновлять образы
+- [ ] Change database passwords
+- [ ] Use secrets for sensitive data
+- [ ] Enable HTTPS for API Gateway
+- [ ] Configure Kafka SSL/SASL
+- [ ] Limit exposed ports
+- [ ] Use non-root users (already configured)
+- [ ] Regularly update images
 
-### Использование Docker Secrets
+### Using Docker Secrets
 
 ```yaml
 services:
@@ -435,9 +431,9 @@ secrets:
 
 ---
 
-## 🚀 Производительность
+## 🚀 Performance
 
-### Оптимизация для production:
+### Production Optimization:
 
 ```yaml
 services:
@@ -456,19 +452,19 @@ services:
         max_attempts: 3
 ```
 
-### Масштабирование:
+### Scaling:
 
 ```bash
-# Запустить несколько инстансов
+# Run multiple instances
 docker-compose up -d --scale user-service=3
 
-# Проверить load balancing в Eureka
+# Check load balancing in Eureka
 curl http://localhost:8761/eureka/apps
 ```
 
 ---
 
-## 📚 Дополнительные ресурсы
+## 📚 Additional Resources
 
 - [Docker Documentation](https://docs.docker.com/)
 - [Docker Compose Documentation](https://docs.docker.com/compose/)
@@ -477,16 +473,15 @@ curl http://localhost:8761/eureka/apps
 
 ---
 
-## 🤝 Поддержка
+## 🤝 Support
 
-При возникновении проблем:
-1. Проверьте логи: `docker-compose logs [service]`
-2. Проверьте health checks: `docker-compose ps`
-3. Проверьте ресурсы: `docker stats`
-4. Создайте issue в репозитории
+If you encounter issues:
+1. Check logs: `docker-compose logs [service]`
+2. Check health checks: `docker-compose ps`
+3. Check resources: `docker stats`
+4. Create an issue in the repository
 
 ---
 
-**Версия документа:** 1.0  
-**Последнее обновление:** 2024
-
+**Document Version:** 1.0  
+**Last Updated:** 2024

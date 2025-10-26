@@ -27,7 +27,7 @@
 
 ### Infrastructure
 - 🐳 **Docker** + **Docker Compose** - containerization
-- 📨 **Apache Kafka** - asynchronous messaging
+- 📨 **Apache Kafka** (KRaft mode) - asynchronous messaging
 - 🔐 **Keycloak** - authentication and authorization
 - ☸️ **Kubernetes** - container orchestration
 
@@ -63,38 +63,27 @@
 
 ```bash
 # Windows (PowerShell)
-.\scripts\docker-build.ps1   # Сборка всех сервисов
-.\scripts\docker-start.ps1   # Запуск платформы
+.\scripts\build.ps1   # Build all services
+.\scripts\start.ps1   # Start platform
 
-# Linux/macOS
-chmod +x scripts/*.sh
-./scripts/docker-build.sh    # Сборка всех сервисов
-./scripts/docker-start.sh    # Запуск платформы
-```
-
-### Manual Docker Compose
-
-```bash
-# Сборка и запуск
+# Or manually
 docker-compose up -d --build
-
-# Просмотр логов
-docker-compose logs -f
 ```
 
-📖 **[Полная Docker документация →](DOCKER_README.md)**
+📖 **[Full Docker Documentation →](DOCKER_README.md)**
 
 ### Access Services
 
-После запуска сервисы доступны по адресам:
+After startup, services are available at:
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| 🌐 Frontend | http://localhost:3000 | React приложение |
+| 🌐 Frontend | http://localhost:3000 | React application |
 | 🔗 API Gateway | http://localhost:8080 | REST API |
 | 🔐 Keycloak | http://localhost:8180 | Auth (admin/admin) |
 | 🔍 Eureka | http://localhost:8761 | Service Registry |
 | 📧 MailHog | http://localhost:8025 | Email testing |
+| 📊 Schema Registry | http://localhost:8081 | Avro schemas |
 
 ## 📁 Project Structure
 
@@ -120,6 +109,7 @@ super-pet/
 - 📊 **Monitoring** - centralized logging and metrics
 - 🚀 **DevOps Ready** - Docker images and K8s manifests
 - 🌐 **API-First** - RESTful APIs for all services
+- ⚡ **Event-Driven** - Kafka-based asynchronous communication
 
 ---
 
