@@ -19,7 +19,7 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/api/v1/rest/users/**
-        - id: task-service-kotlin-rest
-          uri: lb://task-service-kotlin
+        - id: task-service-rest
+          uri: lb://task-service
           predicates:
             - Path=/api/v1/rest/tasks/**

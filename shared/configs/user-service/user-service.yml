@@ -2,9 +2,10 @@ server:
   port: 0
 
 spring:
-  data:
-    mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/taskdb}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
 
 eureka:
   client:
@@ -13,11 +14,13 @@ eureka:
   instance:
     prefer-ip-address: true
 
-task:
-  service:
-    batch-size: 100
-    processing-timeout: 30000
-    retry-attempts: 3
+app:
+  kafka:
+    topics:
+      user:
+        created: user.created
+        updated: user.updated
+        deleted: user.deleted
 
 management:
   endpoints:
