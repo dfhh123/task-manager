@@ -59,13 +59,42 @@
 
 ## 🚀 Quick Start
 
-```bash
-# Start all services
-docker-compose up -d
+### Using Docker Compose (Recommended)
 
-# Or using script
-./scripts/start-services.sh
+```bash
+# Windows (PowerShell)
+.\scripts\docker-build.ps1   # Сборка всех сервисов
+.\scripts\docker-start.ps1   # Запуск платформы
+
+# Linux/macOS
+chmod +x scripts/*.sh
+./scripts/docker-build.sh    # Сборка всех сервисов
+./scripts/docker-start.sh    # Запуск платформы
 ```
+
+### Manual Docker Compose
+
+```bash
+# Сборка и запуск
+docker-compose up -d --build
+
+# Просмотр логов
+docker-compose logs -f
+```
+
+📖 **[Полная Docker документация →](DOCKER_README.md)**
+
+### Access Services
+
+После запуска сервисы доступны по адресам:
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| 🌐 Frontend | http://localhost:3000 | React приложение |
+| 🔗 API Gateway | http://localhost:8080 | REST API |
+| 🔐 Keycloak | http://localhost:8180 | Auth (admin/admin) |
+| 🔍 Eureka | http://localhost:8761 | Service Registry |
+| 📧 MailHog | http://localhost:8025 | Email testing |
 
 ## 📁 Project Structure
 
