@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  config-server:
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - "5005:5005"
+
+  discovery-server:
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
+    ports:
+      - "5006:5006"
+
+  user-service:
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007
+      LOGGING_LEVEL_COM_HOME: DEBUG
+    ports:
+      - "5007:5007"
+
+  task-service:
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5008
+      LOGGING_LEVEL_COM_HOME: DEBUG
+    ports:
+      - "5008:5008"
+
+  notification-service:
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5009
+      LOGGING_LEVEL_COM_HOME: DEBUG
+    ports:
+      - "5009:5009"
+
+  api-gateway:
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5010
+      LOGGING_LEVEL_COM_HOME: DEBUG
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_GATEWAY: DEBUG
+    ports:
+      - "5010:5010"
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      - ./apps/frontend/src:/app/src:ro
+      - ./apps/frontend/public:/app/public:ro
+    environment:
+      NODE_ENV: development
+    command: npm run dev
