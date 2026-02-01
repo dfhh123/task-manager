@@ -1,5 +1,5 @@
-import { Activity as ActivityIcon, User, Calendar, LogIn, LogOut, Plus, Search, Filter } from 'lucide-react';
-import { Card, Badge } from '../components/ui';
+import { Activity as ActivityIcon, User, Calendar, LogIn, LogOut, Plus, Search } from 'lucide-react';
+import { Card, Badge } from '@/components/ui';
 import { mockActivities } from '../data/mockData';
 import { format } from 'date-fns';
 

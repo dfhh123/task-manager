@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTaskStore } from '../../modules/tasks/stores/taskStore';
 import { useAuthStore } from '../../modules/auth/stores/authStore';
-import { demoTasks, demoUser } from '../../data/demoData';
+import { demoTasks } from '../../data/demoData';
 import toast from 'react-hot-toast';
 
 export const DemoLoader: React.FC = () => {

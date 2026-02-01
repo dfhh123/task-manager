@@ -1,24 +1,15 @@
 package com.home.userservice.application.dto;
 
-import com.home.userservice.domain.entity.User;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-/**
- * DTO for {@link User}
- */
+@Builder
 public record UserDto(
-
-        @Email @NotBlank String email,
-
-        @Size(min = 3, max = 3) @NotBlank String language,
-
-        @NotBlank String timezone,
-
+        UUID id,
+        UUID publicId,
+        UserDomainDataDto domainData,
         LocalDateTime createdAt,
-
         LocalDateTime updatedAt)
 {}

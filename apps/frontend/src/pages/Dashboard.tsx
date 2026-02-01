@@ -1,5 +1,5 @@
 import { Users, Calendar, Activity, TrendingUp } from 'lucide-react';
-import { Card, Badge } from '../components/ui';
+import { Badge } from '@/components/ui';
 import { mockDashboardStats, mockEvents, mockActivities } from '../data/mockData';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';

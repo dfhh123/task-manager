@@ -22,10 +22,9 @@ export default defineConfig({
       output: {
         manualChunks: {
           // Разделяем код по модулям
-          'user-module': ['./src/modules/user'],
-          'task-module': ['./src/modules/task'],
-          'analytics-module': ['./src/modules/analytics'],
-          'events-module': ['./src/modules/events'],
+          'tasks-module': ['./src/modules/tasks'],
+          'auth-module': ['./src/modules/auth'],
+          'notifications-module': ['./src/modules/notifications'],
           // Общие библиотеки
           'vendor': ['react', 'react-dom', 'react-router-dom'],
         },

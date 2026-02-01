@@ -1,0 +1,309 @@
+services:
+  super-pet-services-config-server:
+    image: super-pet.services.config-server:latest
+    build:
+      context: services/config-server
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker,native
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    networks:
+      application-network:
+        aliases:
+          - config-server
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/actuator/health" ]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    volumes:
+      - ./services/config-server/build/resources/main/configs:/config
+
+  super-pet-services-discovery-server:
+    image: super-pet.services.discovery-server:latest
+    build:
+      context: services/discovery-server
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    restart: unless-stopped
+    ports:
+      - "8761:8761"
+    networks:
+      application-network:
+        aliases:
+          - discovery-server
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8761/actuator/health" ]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    depends_on:
+      super-pet-services-config-server:
+        condition: service_healthy
+
+  super-pet-api-gateway:
+    image: super-pet.apps.api-gateway:latest
+    build:
+      context: apps/api-gateway
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+    networks:
+      application-network:
+        aliases:
+          - api-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    depends_on:
+      super-pet-services-discovery-server:
+        condition: service_healthy
+      super-pet-services-config-server:
+        condition: service_healthy
+
+  user-service-postgres-db:
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    networks:
+      application-network:
+        aliases:
+          - user-service-db
+    volumes:
+      - postgres_data:/var/lib/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: user_service
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+  pgAdmin:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    networks:
+      application-network:
+        aliases:
+          - pgAdmin
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
+      - ./docker/pgadmin/pgpass:/pgadmin4/pgpass
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    entrypoint: /bin/sh -c "chmod 600 /pgadmin4/pgpass; /entrypoint.sh;"
+    depends_on:
+      user-service-postgres-db:
+        condition: service_healthy
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: start-dev
+    restart: unless-stopped
+    ports:
+      - "9080:9080"
+    networks:
+      application-network:
+        aliases:
+          - keycloak
+    environment:
+      KC_HTTP_PORT: 9080
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: mydb
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres_secret
+      KC_HEALTH_ENABLED: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/health/ready || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 10
+    depends_on:
+      kc-postgres:
+        condition: service_healthy
+
+  kc-postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    networks:
+      application-network:
+        aliases:
+          - keycloak-db
+    volumes:
+      - kc-postgres_data:/var/lib/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_secret
+      POSTGRES_DB: mydb
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+  config-cli:
+    image: adorsys/keycloak-config-cli:latest
+    environment:
+      KEYCLOAK_URL: http://keycloak:9080
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_AVAILABILITYCHECK_ENABLED: true
+      IMPORT_FILES_LOCATIONS: /docker/keycloak/*.yml
+    networks:
+      application-network:
+        aliases:
+          - config-cli
+    volumes:
+      - ./docker/keycloak:/docker/keycloak
+    depends_on:
+      keycloak:
+        condition: service_healthy
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    restart: unless-stopped
+    ports:
+      - "9092:9092"
+    networks:
+      application-network:
+        aliases:
+          - kafka
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: controller,broker
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://0.0.0.0:9092,CONTROLLER://kafka:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      CLUSTER_ID: auo6tzR7RwaQRTsFx620Ow
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 10
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    restart: unless-stopped
+    ports:
+      - "9093:8081"
+    networks:
+      application-network:
+        aliases:
+          - schema-registry
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/subjects"]
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 10
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  kafkaui:
+    image: provectuslabs/kafka-ui:latest
+    restart: unless-stopped
+    ports:
+      - "8989:8080"
+    networks:
+      application-network:
+        aliases:
+          - kafkaui
+    environment:
+      DYNAMIC_CONFIG_ENABLED: "true"
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  mongo:
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    networks:
+      application-network:
+        aliases:
+          - mongo
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongodb_secret
+      MONGO_INITDB_DATABASE: mydb
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'db.runCommand({serverStatus:1}).ok' | mongosh admin -u $$MONGO_INITDB_ROOT_USERNAME -p $$MONGO_INITDB_ROOT_PASSWORD --quiet | grep 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 10
+
+  mongoexpress:
+    image: mongo-express:latest
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    networks:
+      application-network:
+        aliases:
+          - mongoexpress
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: root
+      ME_CONFIG_MONGODB_URL: mongodb://root:mongodb_secret@mongo:27017/
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/status"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 10
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+networks:
+  application-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  kc-postgres_data:
+  mongo_data:

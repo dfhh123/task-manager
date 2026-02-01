@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://user-service-db:5432/user_service
+    username: postgres
+    password: postgres
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  
+  kafka:
+    bootstrap-servers: kafka:29092
+    properties:
+      schema.registry.url: http://schema-registry:8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+

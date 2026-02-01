@@ -4,3 +4,7 @@ spring:
       server:
         native:
           search-locations: file:/config/
+logging:
+  level:
+    root: debug
+    web: debug

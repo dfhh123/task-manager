@@ -40,7 +40,7 @@ export const TaskForm: React.FC = () => {
           disabled={isLoading || !title.trim()}
           className="btn-primary px-4 py-2"
         >
-          <Plus size={16} className="mr-1" />
+          <Plus size={16} className="mr-1 icon-muted text-white dark:text-white" />
           {isLoading ? 'Добавление...' : 'Добавить'}
         </button>
       </form>

@@ -1,0 +1,16 @@
+# Gradle build artifacts
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+
+# Test resources
+src/test/
+
+# Git
+.git/
+.gitignore
+.gitkeep
+
+# Documentation
+README.md
+*.md

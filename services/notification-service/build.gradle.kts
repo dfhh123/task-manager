@@ -1,22 +1,27 @@
 plugins {
-    id("java-conventions")
-    id("spring-boot-conventions")
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
 }
 
 dependencies {
-    implementation(libs.spring.web)
-    implementation(libs.spring.boot.starter.mail)
-    implementation(libs.flyway)
-    implementation(libs.spring.kafka)
+    implementation(platform(libs.spring.boot.bom))
+    implementation(platform(libs.spring.cloud.bom))
+
+    implementation(libs.bundles.notification.service.common)
     implementation(project(":shared:schemas"))
-    implementation(libs.spring.boot.starter.quartz)
-    implementation(libs.spring.cloud.eureka)
-    implementation(libs.spring.boot.starter.data.jdbc)
-    implementation(libs.spring.cloud.starter.config)
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+
     compileOnly(libs.lombok)
+
     annotationProcessor(libs.lombok)
-    implementation(libs.spring.boot.starter.validation)
-    testImplementation(libs.spring.boot.starter.test)
-    testImplementation(libs.spring.kafka.test)
-    runtimeOnly(libs.postgres)
+    annotationProcessor(libs.mapstruct.processor)
+}
+
+tasks.bootJar {
+    archiveFileName.set("app.jar")
+
+    layered {
+        enabled = true
+    }
 }

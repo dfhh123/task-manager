@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { X } from 'lucide-react';
-import { useAuthStore } from '../stores/authStore';
+import { useAuthStore } from '@/modules/auth';
 import toast from 'react-hot-toast';
 
 interface LoginModalProps {

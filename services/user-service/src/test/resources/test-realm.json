@@ -1,0 +1,64 @@
+{
+  "realm": "test",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "user-service",
+      "enabled": true,
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "secret",
+      "serviceAccountsEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "bearerOnly": false,
+      "fullScopeAllowed": false
+    }
+  ],"users": [
+  {
+    "username": "service-account-user-service",
+    "enabled": true,
+    "serviceAccountClientId": "user-service",
+    "clientRoles": {
+      "realm-management": [
+        "manage-users",
+        "query-users",
+        "view-users"
+      ]
+    }
+  },
+  {
+    "username": "test-user",
+    "enabled": true,
+    "credentials": [
+      {
+        "type": "password",
+        "value": "password",
+        "temporary": false
+      }
+    ],
+    "attributes": {
+      "sub": ["test-subject"]
+    }
+  }
+],
+  "roles": {
+    "client": {
+      "realm-management": [
+        {
+          "name": "manage-users",
+          "description": "${role_manage-users}"
+        },
+        {
+          "name": "query-users",
+          "description": "${role_query-users}"
+        },
+        {
+          "name": "view-users",
+          "description": "${role_view-users}"
+        }
+      ]
+    }
+  }
+}

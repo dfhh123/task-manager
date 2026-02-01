@@ -53,18 +53,18 @@ export const TaskModal: React.FC<TaskModalProps> = ({ task, isOpen, onClose }) =
     <div className="modal-overlay">
       <div className="modal-content max-w-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Редактирование задачи</h2>
+          <h2 className="text-xl font-semibold dark:text-white">Редактирование задачи</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
           >
-            <X size={20} />
+            <X size={20} className="icon-muted" />
           </button>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="task-title" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="task-title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Заголовок
             </label>
             <input
@@ -78,7 +78,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ task, isOpen, onClose }) =
           </div>
 
           <div>
-            <label htmlFor="task-description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="task-description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Описание
             </label>
             <textarea
@@ -96,23 +96,23 @@ export const TaskModal: React.FC<TaskModalProps> = ({ task, isOpen, onClose }) =
               type="checkbox"
               checked={completed}
               onChange={handleToggleCompleted}
-              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 dark:focus:ring-blue-400"
             />
-            <label htmlFor="task-completed" className="text-sm font-medium text-gray-700">
+            <label htmlFor="task-completed" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Задача выполнена
             </label>
           </div>
 
-          <div className="flex justify-between items-center pt-4 border-t">
+          <div className="flex justify-between items-center pt-4 border-t dark:border-gray-700">
             <button
               onClick={handleDelete}
               className="btn-danger flex items-center gap-2"
             >
-              <Trash2 size={16} />
+              <Trash2 size={16} className="icon-muted" />
               Удалить
             </button>
             
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               <p>Создано: {new Date(task.createdAt).toLocaleString('ru-RU')}</p>
               {task.updatedAt !== task.createdAt && (
                 <p>Изменено: {new Date(task.updatedAt).toLocaleString('ru-RU')}</p>
@@ -121,8 +121,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ task, isOpen, onClose }) =
           </div>
         </div>
 
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-          <p className="text-sm text-blue-800">
+        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded">
+          <p className="text-sm text-blue-800 dark:text-blue-300">
             <strong>Автосохранение:</strong> Изменения сохраняются автоматически при редактировании полей.
           </p>
         </div>

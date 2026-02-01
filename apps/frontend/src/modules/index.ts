@@ -1,8 +1,8 @@
 // Центральный экспорт всех модулей
 export { UserModule } from './user/UserModule';
-export { TaskModule } from './task/TaskModule';
-export { AnalyticsModule } from './analytics/AnalyticsModule';
-export { EventsModule } from './events/EventsModule';
+export { TaskModule } from './tasks/TaskModule';
+export { AuthModule } from './auth/AuthModule';
+export { NotificationModule } from './notifications/NotificationModule';
 
 // Общие компоненты и утилиты
-export * from './shared';
+// export * from './shared';

@@ -1,0 +1,19 @@
+# Gradle build artifacts and cache
+.gradle/
+bin/
+
+# Test directories
+src/test/
+
+# IDE files
+*.iml
+
+# Git
+.git/
+
+# Documentation
+README.md
+*.md
+
+# Docker
+.dockerignore

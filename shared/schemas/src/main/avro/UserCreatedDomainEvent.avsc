@@ -6,10 +6,8 @@
     {
       "name": "id",
       "type": {
-        "type": "string",
-        "logicalType": "uuid"
+        "type": "string"
       }
-    },
-    {"name": "email", "type": "string", "doc": "user email"}
+    }
   ]
 }

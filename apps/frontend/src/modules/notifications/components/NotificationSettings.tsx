@@ -20,14 +20,14 @@ export const NotificationSettings: React.FC = () => {
   return (
     <div className="card">
       <div className="flex items-center gap-2 mb-4">
-        <Settings size={20} className="text-gray-600" />
+        <Settings size={20} className="icon-muted" />
         <h3 className="text-lg font-semibold">Настройки уведомлений</h3>
       </div>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Mail size={16} className="text-gray-600" />
+            <Mail size={16} className="icon-muted" />
             <div>
               <p className="font-medium">Приветственное письмо</p>
               <p className="text-sm text-gray-500">
@@ -48,7 +48,7 @@ export const NotificationSettings: React.FC = () => {
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Bell size={16} className="text-gray-600" />
+            <Bell size={16} className="icon-muted" />
             <div>
               <p className="font-medium">Ежедневный отчет</p>
               <p className="text-sm text-gray-500">

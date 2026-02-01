@@ -4,10 +4,16 @@ server:
 spring:
   application:
     name: config-server
+
   profiles:
-    active: native
-  cloud:
-    config:
-      server:
-        native:
-          search-locations: classpath:/configs/,file:./shared/configs/
+    group:
+      local: "local, native"
+
+logging:
+  level:
+    root: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus

@@ -1,5 +1,5 @@
 import { BarChart3, TrendingUp, Users, Calendar, PieChart } from 'lucide-react';
-import { Card } from '../components/ui';
+import { Card } from '@/components/ui';
 import { mockDashboardStats } from '../data/mockData';
 
 export const Analytics = () => {

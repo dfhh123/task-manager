@@ -1,5 +1,5 @@
 import { User, Mail, Shield, Clock, Search, Plus, MoreHorizontal } from 'lucide-react';
-import { Card, Badge, Button } from '../components/ui';
+import { Card, Badge, Button } from '@/components/ui';
 import { mockUsers } from '../data/mockData';
 import { format } from 'date-fns';
 

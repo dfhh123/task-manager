@@ -1,0 +1,17 @@
+# Gradle files and build artifacts (except the final JAR)
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# Source code (not needed in image)
+src/
+
+# Git metadata
+.git/
+.gitignore
+.gitkeep
+
+# Documentation
+README.md
+*.md

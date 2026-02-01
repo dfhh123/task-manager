@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: user-service
+logging:
+  level:
+    org.flywaydb: INFO

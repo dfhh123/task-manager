@@ -1,5 +1,7 @@
 package com.home.userservice.errors;
 
+import com.home.userservice.application.exceptions.KeycloakUserRegistrationException;
+import com.home.userservice.application.exceptions.UserNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,6 +18,11 @@ public class GlobalErrorHandler {
     @ExceptionHandler
     public ResponseEntity<Object> handleException(UserNotFoundException ex) {
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleException(KeycloakUserRegistrationException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler

@@ -1,9 +1,8 @@
 package com.home.userservice.application.events;
 
 import com.home.avro.event.user.*;
-import com.home.userservice.application.config.KafkaTopicsProperties;
 import lombok.AllArgsConstructor;
-import org.apache.avro.specific.SpecificRecordBase;
+import org.apache.avro.specific.SpecificRecord;
 import org.springframework.context.event.EventListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -12,22 +11,20 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class UserEventsToKafkaSender {
 
-    private final KafkaTemplate<String, SpecificRecordBase> kafkaTemplate;
-
-    private final KafkaTopicsProperties topics;
+    private final KafkaTemplate<String, SpecificRecord> kafkaTemplate;
 
     @EventListener()
     public void publishEvent(UserCreatedEvent event) {
-        kafkaTemplate.send(topics.getCreated(), event.getId().toString(), event);
+        kafkaTemplate.send("user-created", event.getId().toString(), event);
     }
 
     @EventListener
     public void publishEvent(UserDeletedEvent event) {
-        kafkaTemplate.send(topics.getDeleted(), event.getId().toString(), event);
+        kafkaTemplate.send("user-deleted", event.getId().toString(), event);
     }
 
     @EventListener
     public void publishEvent(UserUpdatedEvent event) {
-        kafkaTemplate.send(topics.getUpdated(), event.getId().toString(), event);
+        kafkaTemplate.send("user-updated", event.getId().toString(), event);
     }
 }

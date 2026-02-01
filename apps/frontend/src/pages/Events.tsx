@@ -1,5 +1,5 @@
 import { Calendar, MapPin, Users, Plus, Search, Filter } from 'lucide-react';
-import { Card, Badge, Button } from '../components/ui';
+import { Card, Badge, Button } from '@/components/ui';
 import { mockEvents } from '../data/mockData';
 import { format } from 'date-fns';
 

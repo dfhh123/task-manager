@@ -1,0 +1,30 @@
+server:
+  port: 0
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/taskdb}
+
+  kafka:
+    properties:
+      shema.registry.url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+task:
+  service:
+    batch-size: 100
+    processing-timeout: 30000
+    retry-attempts: 3
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus

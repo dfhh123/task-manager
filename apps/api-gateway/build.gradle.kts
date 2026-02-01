@@ -1,10 +1,21 @@
 plugins {
-    id("spring-boot-conventions")
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
 }
 
 dependencies {
-    implementation(libs.spring.cloud.gateway)
-    implementation(libs.spring.cloud.eureka)
-    testImplementation(libs.spring.boot.starter.test)
+    implementation(platform(libs.spring.boot.bom))
+    implementation(platform(libs.spring.cloud.bom))
+
+    implementation(libs.bundles.api.gateway.common)
+
+    compileOnly(libs.lombok)
 }
 
+tasks.bootJar {
+    archiveFileName.set("app.jar")
+
+    layered {
+        enabled = true
+    }
+}

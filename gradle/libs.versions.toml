@@ -1,46 +1,207 @@
+# ======================================================
+# Version Catalog
+# ======================================================
+
 [versions]
-spring-boot = "3.5.6"
-postgres = "42.7.8"
-junit = "6.0.0"
-mapstruct = "1.6.3"
-confluent = "8.0.0"
+spring-boot = "4.0.1"
+spring-cloud = "2025.1.0"
+confluent = "8.1.1"
 avro = "1.12.1"
-spring-kafka = "3.3.10"
-kotlin = "2.0.21"
+postgres = "42.7.8"
+flyway = "11.20.2"
+kc-admin-client = "26.0.8"
+mapstruct = "1.6.3"
+lombok = "1.18.42"
+
+testconteiners = "1.21.4"
+tc-pg = "2.0.2"
+tc-kc = "4.1.1"
+testconreiners-kafka = "1.21.4"
+
+
 
 [libraries]
-spring-web = { module = "org.springframework.boot:spring-boot-starter-web" }
-postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
-junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
-junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-spring-kafka = { module = "org.springframework.kafka:spring-kafka", version.ref = "spring-kafka" }
-kafka-avro-serializer = { module = "io.confluent:kafka-avro-serializer", version.ref = "confluent" }
-avro = { module = "org.apache.avro:avro", version.ref = "avro" }
-mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
-mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
-lombok = { module = "org.projectlombok:lombok" }
+# --- BOM Imports ---
+spring-boot-bom = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+spring-cloud-bom = { module = "org.springframework.cloud:spring-cloud-dependencies", version.ref = "spring-cloud" }
+
+# --- Starters ---
+spring-boot = { module = "org.springframework.boot:spring-boot-starter"}
+spring-webmvc = { module = "org.springframework.boot:spring-boot-starter-webmvc" }
 spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 spring-boot-starter-mail = { module = "org.springframework.boot:spring-boot-starter-mail" }
 spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
 spring-boot-starter-data-jdbc = { module = "org.springframework.boot:spring-boot-starter-data-jdbc" }
-spring-boot-starter-quartz = { module = "org.springframework.boot:spring-boot-starter-quartz" }
-spring-cloud-eureka = { module = "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client" }
-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
-spring-kafka-test = { module = "org.springframework.kafka:spring-kafka-test", version.ref = "spring-kafka" }
-flyway = { module = "org.flywaydb:flyway-core" }
 spring-boot-starter-data-mongodb = { module = "org.springframework.boot:spring-boot-starter-data-mongodb" }
-spring-cloud-config-server = { module = "org.springframework.cloud:spring-cloud-config-server" }
-spring-cloud-gateway = { module = "org.springframework.cloud:spring-cloud-starter-gateway" }
-spring-cloud-eureka-server = { module = "org.springframework.cloud:spring-cloud-starter-netflix-eureka-server" }
+spring-boot-starter-quartz = { module = "org.springframework.boot:spring-boot-starter-quartz" }
+spring-boot-starter-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-client"}
+spring-boot-starter-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-security-oauth2-resource-server"}
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security"}
+spring-boot-starter-kafka = { module = "org.springframework.boot:spring-boot-starter-kafka"}
 spring-cloud-starter-config = { module = "org.springframework.cloud:spring-cloud-starter-config" }
+spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux"}
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator"}
+spring-boot-starter-flyway = { module = "org.springframework.boot:spring-boot-starter-flyway" }
+spring-boot-resttestclient = { module = "org.springframework.boot:spring-boot-resttestclient" }
+
+# --- Cloud ---
+spring-cloud-gateway = { module = "org.springframework.cloud:spring-cloud-starter-gateway-server-webflux"}
+spring-cloud-eureka-client = { module = "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client" }
+spring-cloud-eureka-server = { module = "org.springframework.cloud:spring-cloud-starter-netflix-eureka-server" }
+spring-cloud-config-server = { module = "org.springframework.cloud:spring-cloud-config-server" }
+
+# --- Kafka / Avro ---
+kafka-avro-serializer = { module = "io.confluent:kafka-avro-serializer", version.ref = "confluent" }
+avro = { module = "org.apache.avro:avro", version.ref = "avro" }
+
+# --- Database ---
+postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
+flyway-database-postgresql = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flyway" }
+
+# --- Keycloak ---
+keycloak-admin-client = { module = "org.keycloak:keycloak-admin-client", version.ref = "kc-admin-client"}
+
+# --- Mapping & Utils ---
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
+mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+
+# --- Testing ---
+spring-boot-starter-security-test = { module = "org.springframework.boot:spring-boot-starter-security-test" }
+spring-boot-starter-webmvc-test = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
+spring-kafka-test = { module = "org.springframework.kafka:spring-kafka-test" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
+testcontainers-keycloak = { module =  "com.github.dasniko:testcontainers-keycloak", version.ref = "tc-kc" }
+testcontainers-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testconteiners" }
+testconteiners-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "tc-pg"}
+testconreiners-kafka = { module = "org.testcontainers:kafka", version.ref = "testconreiners-kafka"}
+
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
-dependency-management = { id = "io.spring.dependency-management", version = "1.1.6" }
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+dependency-management = { id = "io.spring.dependency-management", version = "1.1.7" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.3.0" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version = "2.3.0" }
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version = "2.3.0" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version = "2.3.0" }
 
 [bundles]
-junit = ["junit-api", "junit-engine"]
-mapstruct-java = ["mapstruct", "mapstruct-processor"]
+
+# --- User Service Bundle ---
+user-service-common = [
+    # base
+    "spring-boot",
+    "spring-webmvc",
+    "spring-boot-starter-validation",
+    "spring-cloud-starter-config",
+    "spring-cloud-eureka-client",
+
+    # persistence
+    "spring-boot-starter-data-jpa",
+    "postgres",
+    'spring-boot-starter-flyway',
+    "flyway-database-postgresql",
+    "mapstruct",
+
+    # kafka
+    "spring-boot-starter-kafka",
+    "kafka-avro-serializer",
+    "avro",
+
+    # security
+    "spring-boot-starter-security",
+    "spring-boot-starter-oauth2-client",
+    "spring-boot-starter-oauth2-resource-server",
+    "keycloak-admin-client"
+]
+
+# Test
+user-service-testing = [
+    "spring-boot-starter-test",
+    "spring-boot-starter-security-test",
+    "spring-boot-testcontainers",
+    "spring-kafka-test",
+    "spring-boot-starter-webmvc-test",
+    "spring-boot-resttestclient",
+    "testcontainers-jupiter",
+    "testconteiners-postgresql",
+    "testcontainers-keycloak",
+    "testconreiners-kafka"
+]
+
+
+# --- Task Service Bundle ---
+task-service-common = [
+    # Base Spring + Web
+    "spring-boot",
+    "spring-webmvc",
+    "spring-boot-starter-validation",
+    "spring-cloud-starter-config",
+    "spring-cloud-eureka-client",
+    "spring-boot-starter-security",
+    "spring-boot-starter-oauth2-resource-server",
+
+    # Persistence
+    "spring-boot-starter-data-mongodb",
+    "mapstruct",
+
+    # Kafka
+    "spring-boot-starter-kafka",
+    "kafka-avro-serializer",
+    "avro"
+]
+
+task-service-testing = [
+    "spring-boot-starter-test",
+    "spring-boot-starter-security-test",
+    "spring-kafka-test",
+    "spring-boot-starter-webmvc-test",
+    "spring-boot-resttestclient",
+    "testcontainers-jupiter",
+    "testcontainers-keycloak"
+]
+
+
+# --- Notification Service Bundle ---
+notification-service-common = [
+    "spring-boot",
+    "spring-webmvc",
+    "spring-boot-starter-data-mongodb",
+    "spring-boot-starter-quartz",
+    "spring-cloud-starter-config",
+    "spring-boot-starter-security",
+    "spring-boot-starter-oauth2-client",
+    "spring-cloud-eureka-client",
+
+
+    "spring-boot-starter-kafka",
+    "kafka-avro-serializer",
+    "avro",
+]
+
+# --- Discovery Service Bundle ---
+discovery-service-common = [
+    'spring-boot',
+    'spring-webmvc',
+    'spring-cloud-eureka-server',
+    'spring-cloud-starter-config'
+]
+
+
+# --- Config Service Bundle ---
+config-service-common = [
+    'spring-boot',
+    'spring-cloud-config-server'
+]
+
+
+# --- Api-Gateway Service Bundle ---
+api-gateway-common = [
+    'spring-cloud-gateway',
+    'spring-cloud-eureka-client',
+    'spring-boot-starter-security',
+    'spring-boot-starter-oauth2-resource-server',
+    'spring-boot-starter-actuator',
+    'spring-cloud-starter-config'
+]

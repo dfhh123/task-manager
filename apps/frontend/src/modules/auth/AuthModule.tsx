@@ -1,7 +1,7 @@
 import React from 'react';
 import { LoginModal } from './components/LoginModal';
 import { RegisterModal } from './components/RegisterModal';
-import { useModalStore } from '../../stores/modalStore';
+import { useModalStore } from '@/stores/modalStore.ts';
 
 export const AuthModule: React.FC = () => {
   const { isLoginOpen, isRegisterOpen, openRegister, openLogin, closeModals } = useModalStore();

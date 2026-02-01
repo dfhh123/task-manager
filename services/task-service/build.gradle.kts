@@ -1,15 +1,19 @@
 plugins {
-    id("spring-boot-conventions")
-    id("kotlin-conventions")
+    alias(libs.plugins.dependency.management)
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.kotlin.allopen)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 dependencies {
-    implementation(libs.spring.web)
-    implementation(libs.spring.cloud.eureka)
-    implementation(libs.spring.boot.starter.data.mongodb)
-    implementation(libs.spring.boot.starter.validation)
+
+    implementation(platform(libs.spring.boot.bom))
+    implementation(platform(libs.spring.cloud.bom))
+
+    implementation(libs.bundles.task.service.common)
     implementation(project(":shared:schemas"))
-    testImplementation(libs.spring.boot.starter.test)
-    compileOnly(libs.mapstruct)
-    kapt(libs.mapstruct.processor)
+
+    testImplementation(libs.bundles.task.service.testing)
 }
+

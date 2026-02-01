@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Super Pet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .content {
+            padding: 40px 30px;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        .content h2 {
+            color: #4CAF50;
+            margin-top: 0;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 20px 0;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .footer {
+            background-color: #f4f4f4;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="header">
+        <h1>Welcome to Super Pet! 🐾</h1>
+    </div>
+    <div class="content">
+        <h2>Hello, {{USER_EMAIL}}!</h2>
+        <p>Thank you for registering with Super Pet. We're excited to have you as part of our community!</p>
+        <p>Your account has been successfully created and you can now start using all the features of our service.</p>
+        <p>Here's what you can do next:</p>
+        <ul>
+            <li>Complete your profile</li>
+            <li>Add your first pet</li>
+            <li>Explore our features</li>
+        </ul>
+        <div style="text-align: center;">
+            <a href="{{APP_URL}}" class="button">Get Started</a>
+        </div>
+        <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>
+    </div>
+    <div class="footer">
+        <p>&copy; 2025 Super Pet. All rights reserved.</p>
+        <p>
+            <a href="{{PRIVACY_URL}}">Privacy Policy</a> |
+            <a href="{{TERMS_URL}}">Terms of Service</a> |
+            <a href="{{CONTACT_URL}}">Contact Us</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

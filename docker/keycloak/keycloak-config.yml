@@ -1,0 +1,55 @@
+realm: super-pet
+enabled: true
+displayName: Super Pet Realm
+registrationEmailAsUsername: true
+loginWithEmailAllowed: true
+duplicateEmailsAllowed: false
+
+roles:
+  realm:
+    - name: admin
+      description: Administrators
+    - name: user
+      description: Users
+
+defaultRoles:
+  - user
+
+clients:
+  - clientId: api-gateway-client
+    enabled: true
+    clientAuthenticatorType: client-secret
+    secret: secret
+    rootUrl: http://api-gateway:8080
+    redirectUris:
+      - "http://api-gateway:8080/*"
+    webOrigins:
+      - "+"
+    protocol: openid-connect
+    publicClient: false
+    standardFlowEnabled: true
+    implicitFlowEnabled: false
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: true
+    defaultClientScopes:
+      - email
+      - profile
+
+  - clientId: user-service-client
+    enabled: true
+    clientAuthenticatorType: client-secret
+    secret: secret
+    protocol: openid-connect
+    publicClient: false
+    serviceAccountsEnabled: true
+    directAccessGrantsEnabled: true
+
+  - clientId: task-service-client
+    enabled: true
+    clientAuthenticatorType: client-secret
+    secret: secret
+
+  - clientId: Notification-service-client
+    enabled: true
+    clientAuthenticatorType: client-secret
+    secret: secret
