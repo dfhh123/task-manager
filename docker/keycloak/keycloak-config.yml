@@ -7,9 +7,9 @@ duplicateEmailsAllowed: false
 
 roles:
   realm:
-    - name: admin
+    - name: super-pet-admin
       description: Administrators
-    - name: user
+    - name: super-pet-user
       description: Users
 
 defaultRoles:

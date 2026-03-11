@@ -6,8 +6,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Collection;
 
 @Document(collection = "users")
 @AllArgsConstructor
@@ -16,9 +15,9 @@ import java.util.UUID;
 public class User {
 
     @Id
-    private UUID publicId;
+    private String publicId;
 
     private String email;
 
-    private List<Task> tasks;
+    private Collection<String> tasksIds;
 }

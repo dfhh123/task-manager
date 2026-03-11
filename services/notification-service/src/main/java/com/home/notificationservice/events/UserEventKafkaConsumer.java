@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 /**
  * Kafka consumer for user events
  */
@@ -26,10 +24,10 @@ public class UserEventKafkaConsumer {
      */
     @KafkaListener(topics = "user.created", groupId = "${spring.kafka.consumer.group-id}")
     public void onUserCreated(UserCreatedEvent event) {
-        UUID userId = event.getId();
+        String userId = event.getId();
         log.info("Processing UserCreatedEvent for user ID: {}", userId);
         try {
-            notificationService.sendGreetingNotification(event.getId());
+            notificationService.sendGreetingsNotification(event.getId());
             log.info("Successfully processed UserCreatedEvent for user ID: {}", userId);
         } catch (Exception e) {
             log.error("Error processing UserCreatedEvent for user ID: {}. Error: {}", userId, e.getMessage(), e);
@@ -42,7 +40,7 @@ public class UserEventKafkaConsumer {
      */
     @KafkaListener(topics = "user.updated", groupId = "${spring.kafka.consumer.group-id}")
     public void onUserUpdated(UserUpdatedEvent event) {
-        UUID userId = event.getId();
+        String userId = event.getId();
         log.info("Processing UserUpdatedEvent for user ID: {}", userId);
         try {
             notificationService.sendUserUpdateNotification(event.getId());
@@ -58,7 +56,7 @@ public class UserEventKafkaConsumer {
      */
     @KafkaListener(topics = "user.deleted", groupId = "${spring.kafka.consumer.group-id}")
     public void onUserDeleted(UserDeletedEvent event) {
-        UUID userId = event.getId();
+        String userId = event.getId();
         log.info("Processing UserDeletedEvent for user ID: {}", userId);
         try {
             notificationService.sendUserDeletionNotification(event.getId());

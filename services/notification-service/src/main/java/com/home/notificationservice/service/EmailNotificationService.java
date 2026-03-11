@@ -12,13 +12,9 @@ import org.springframework.web.client.RestClient;
 @Slf4j
 public class EmailNotificationService {
 
-    //TODO(корректно вставить апи кей)
-    @Value("")
-    private final String apiKey;
-
-    private final RestClient restClient;
-
-    private final TaskService taskService;
+//    //TODO(корректно вставить апи кей)
+//    @Value("")
+//    private final String apiKey;
 
     @EventListener
     public void handleUserEvent(NotificationEvent eventData) {

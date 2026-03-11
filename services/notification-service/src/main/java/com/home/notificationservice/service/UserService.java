@@ -14,5 +14,5 @@ public interface UserService {
 
     User createUser(UserDto userDto);
 
-    String getUserEmail(UUID publicId);
+    String getUserEmail(String publicId);
 }

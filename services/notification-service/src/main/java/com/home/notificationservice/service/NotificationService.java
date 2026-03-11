@@ -1,12 +1,10 @@
 package com.home.notificationservice.service;
 
-import java.util.UUID;
-
 public interface NotificationService {
 
-    void sendGreetingNotification(UUID id);
+    void sendGreetingsNotification(String id);
 
-    void sendUserUpdateNotification(UUID id);
+    void sendUserUpdateNotification(String id);
 
-    void sendUserDeletionNotification(UUID id);
+    void sendUserDeletionNotification(String id);
 }

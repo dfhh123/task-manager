@@ -9,6 +9,10 @@ public class ApiVersionConfiguration implements WebMvcConfigurer {
 
     @Override
     public void configureApiVersioning(ApiVersionConfigurer configurer) {
-        configurer.usePathSegment(2);
+        configurer
+                .usePathSegment(2)
+                .setVersionRequired(false)
+                .setDefaultVersion("1")
+                .addSupportedVersions("1");
     }
 }

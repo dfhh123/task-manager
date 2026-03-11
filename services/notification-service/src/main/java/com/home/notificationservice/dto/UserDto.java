@@ -7,7 +7,7 @@ import java.util.UUID;
  * @param email
  */
 public record UserDto(
-        UUID publicId,
+        String publicId,
         String email
 ) {
 }

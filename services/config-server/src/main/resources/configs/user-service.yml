@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
   jpa:
@@ -7,13 +7,17 @@ spring:
       ddl-auto: validate
     open-in-view: false
 
+  flyway:
+    enabled: true
+    default-schema: user-service
+    schemas: user-service
+    baseline-on-migrate: true
+
   kafka:
+    producer:
+      transaction-id-prefix: user-service-tx
     properties:
       schema.registry.url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
-  cache:
-    type: caffeine
-    caffeine:
-      spec: maximumSize=1000,expireAfterAccess=10m
 
 eureka:
   client:
@@ -27,8 +31,6 @@ eureka:
       management.context-path: /
 
 management:
-  server:
-    port: 8081
   endpoints:
     web:
       exposure:

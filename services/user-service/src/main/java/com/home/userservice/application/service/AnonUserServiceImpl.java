@@ -15,7 +15,6 @@ public class AnonUserServiceImpl implements AnonUserService {
     private final KeycloakService keycloakService;
 
     @Override
-    @Transactional
     public UserResponseRegistrationDto registerUser(UserRequestRegistrationDto dto) {
         String id = keycloakService.registerUser(dto.registrationData());
 

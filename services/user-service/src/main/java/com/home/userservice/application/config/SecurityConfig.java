@@ -3,14 +3,16 @@ package com.home.userservice.application.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -20,22 +22,25 @@ import java.util.stream.Stream;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String DEFAULT_CRUD_URL_PATTERN = "/api/rest/*/users/**";
-    private static final String ADMIN_ROLE = "ADMIN";
-    private static final String USER_ROLE = "USER";
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/rest/*/users/registration").anonymous()
-                        .requestMatchers("/api/rest/*/users/me").hasRole(USER_ROLE)
-                        .requestMatchers(DEFAULT_CRUD_URL_PATTERN).hasRole(ADMIN_ROLE)
+                        .requestMatchers("/api/rest/v*/ping").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/rest/v*/users/register").permitAll()
+
+                        .requestMatchers("/api/rest/v*/users/me").hasRole("USER")
+                        .requestMatchers("/api/rest/v*/users/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(keycloakJwtAuthConverter()))
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(keycloakJwtAuthConverter())
+                        )
                 );
 
         return http.build();
@@ -49,22 +54,22 @@ public class SecurityConfig {
     }
 
     private Collection<GrantedAuthority> extractAuthoritiesFromJwt(Jwt jwt) {
-        Stream<GrantedAuthority> realmRoles = Optional.ofNullable((Map<String, Object>) jwt.getClaim("realm_access"))
-                .map(claimMap -> (List<String>) claimMap.getOrDefault("roles", List.of()))
-                .stream()
-                .flatMap(Collection::stream)
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
+        List<String> realmRoles = Optional.ofNullable(jwt.getClaimAsMap("realm_access"))
+                .map(m -> (List<String>) m.get("roles"))
+                .orElse(List.of());
 
-        Stream<GrantedAuthority> clientRoles = Optional.ofNullable((Map<String, Object>) jwt.getClaim("resource_access"))
-                .orElse(Map.of())
-                .values().stream()
+        List<String> clientRoles = Optional.ofNullable(jwt.getClaimAsMap("resource_access"))
+                .map(Map::values)
+                .orElse(List.of())
+                .stream()
                 .map(obj -> (Map<String, Object>) obj)
                 .map(client -> (List<String>) client.getOrDefault("roles", List.of()))
                 .flatMap(Collection::stream)
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
+                .toList();
 
-        Collection<GrantedAuthority> authorities = Stream.concat(realmRoles, clientRoles).toList();
-        log.debug("Extracted authorities from JWT: {}", authorities);
-        return authorities;
+        return Stream.concat(
+                realmRoles.stream().map(role -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())),
+                clientRoles.stream().map(role -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+        ).toList();
     }
 }

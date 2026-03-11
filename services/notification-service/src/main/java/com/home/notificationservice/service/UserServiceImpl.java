@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getUserEmail(UUID publicId) {
+    public String getUserEmail(String publicId) {
         return userRepository.findByPublicId(publicId).getEmail();
     }
 }

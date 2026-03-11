@@ -6,15 +6,17 @@ services:
       dockerfile: Dockerfile
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-    restart: unless-stopped
+      - JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005
+    restart: no
     ports:
       - "8083:8080"
+      - "5005:5005"
     networks:
       application-network:
         aliases:
           - user-service
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8083/actuator/health"]
       interval: 30s
       timeout: 5s
       start_period: 30s

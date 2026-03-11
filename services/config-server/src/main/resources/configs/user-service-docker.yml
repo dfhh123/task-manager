@@ -3,15 +3,55 @@ spring:
     url: jdbc:postgresql://user-service-db:5432/user_service
     username: postgres
     password: postgres
+
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
   
   kafka:
-    bootstrap-servers: kafka:29092
+    bootstrap-servers: kafka:9092
     properties:
       schema.registry.url: http://schema-registry:8081
+      specific.avro.reader: true
+      auto.register.schemas: true
+      enable.idempotence: true
+      max.in.flight.requests.per.connection: 5
+      compression.type: snappy
+
+    producer:
+      acks: all
+      retries: 10
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+
+    consumer:
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://keycloak:8080/realms/super-pet
+            token-uri: http://keycloak:8080/realms/super-pet/protocol/openid-connect/token
+        registration:
+          keycloak-service:
+            provider: keycloak
+            client-id: user-service-client
+            client-secret: secret
+            authorization-grant-type: client_credentials
+            scope: openid
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/super-pet
+keycloak:
+  server-url: http://keycloak:8080
+  realm: super-pet
+  client-id: user-service-client
+  client-secret: secret
 
 eureka:
   client:

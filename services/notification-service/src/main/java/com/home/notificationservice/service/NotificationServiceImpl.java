@@ -1,12 +1,8 @@
 package com.home.notificationservice.service;
 
-import com.home.notificationservice.dto.NotificationData;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -16,19 +12,19 @@ public class NotificationServiceImpl implements NotificationService {
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
-    public void sendGreetingNotification(UUID id) {
+    public void sendGreetingsNotification(String id) {
         eventPublisher.publishEvent(new NotificationEvent(userService.getUserEmail(id),
                 NotificationEvent.EventType.GREETING));
     }
 
     @Override
-    public void sendUserUpdateNotification(UUID id) {
+    public void sendUserUpdateNotification(String id) {
         eventPublisher.publishEvent(new NotificationEvent(userService.getUserEmail(id),
                 NotificationEvent.EventType.USER_UPDATE));
     }
 
     @Override
-    public void sendUserDeletionNotification(UUID id) {
+    public void sendUserDeletionNotification(String id) {
         eventPublisher.publishEvent(new NotificationEvent(userService.getUserEmail(id),
                 NotificationEvent.EventType.USER_DELETE));
     }
